@@ -1,15 +1,19 @@
-package lock;
+package bloqueio.semaforo;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.Semaphore;
 
 public class Banheiro {
-	private Lock lock = new ReentrantLock();
+	// O semáforo tem um contador (limite) personalizável
+	private Semaphore sem = new Semaphore(2);
 	
 	public void fazNumero1() {
 		String nome = Thread.currentThread().getName();
 		
-		lock.lock();
+		try {
+			sem.acquire();
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 		System.out.println(nome + " entrou no banheiro");
 		System.out.println(nome + " está iniciando atividade rápida");
@@ -25,13 +29,17 @@ public class Banheiro {
 		System.out.println(nome + " lavou as mãos.");
 		System.out.println(nome + " saiu do banheiro.");
 		
-		lock.unlock();
+		sem.release();
 	}
 	
 	public void fazNumero2() {
 		String nome = Thread.currentThread().getName();
 		
-		lock.lock();
+		try {
+			sem.acquire();
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 		System.out.println(nome + " entrou no banheiro");
 		System.out.println(nome + " está iniciando atividade demorada");
@@ -47,6 +55,6 @@ public class Banheiro {
 		System.out.println(nome + " lavou as mãos.");
 		System.out.println(nome + " saiu do banheiro.");
 		
-		lock.unlock();
+		sem.release();
 	}
 }
